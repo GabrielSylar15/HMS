@@ -40,7 +40,6 @@
         <div class="bg-primary"></div>
     </div>
     <!-- [ Preloader ] End -->
-
     <!-- [ content ] Start -->
     <div class="authentication-wrapper authentication-1 px-4">
         <div class="authentication-inner py-5">
@@ -55,25 +54,39 @@
                 </div>
             </div>
             <!-- [ Logo ] End -->
-
             <!-- [ Form ] Start -->
-            <form class="my-5">
+            <form class="my-5" action="/Accounts/Signup" method="POST">
                 <div class="form-group">
-                    <label class="form-label">Your name</label>
-                    <input type="text" class="form-control">
+                    <label class="form-label">Display name</label>
+                    <input type="text" class="form-control" name="a.DisplayName">
                     <div class="clearfix"></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Your email</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" name="a.UserName">
                     <div class="clearfix"></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" name="a.Password">
                     <div class="clearfix"></div>
                 </div>
-                <button type="button" class="btn btn-primary btn-block mt-4">Sign Up</button>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" id="phone" name="a.Phone" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" class="form-control">
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" name="a.DoB">
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" name="a.Address">
+                    <div class="clearfix"></div>
+                </div>
+                <input type="submit" class="btn btn-primary btn-block mt-4" value="Sign Up">
                 <div class="bg-lightest text-muted small p-2 mt-4">
                     By clicking "Sign Up", you agree to our
                     <a href="javascript:void(0)">terms of service and privacy policy</a>. We’ll occasionally send you account related emails.

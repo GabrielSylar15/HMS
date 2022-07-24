@@ -1,0 +1,143 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Reservation
+    <!-- Blog Section Begin -->
+    <form id = "BookingRoom" method = "Post" action = "/Rooms/Booking">
+        <input type = "hidden" value = "@Model.Account.AccountId" name = "Reservation.AccountId"/>
+        <input type = "hidden" value = "@Model.Room.RoomId" name = "Reservation.RoomId"/>
+        <input type = "hidden" value = "@Model.StartDate" name = "Reservation.StartDate"/>
+        <input type = "hidden" value = "@Model.EndDate" name = "Reservation.EndDate"/>
+        <input type = "hidden" value = "@Model.Price" name = "Reservation.Price"/>
+    <section class="blog-section spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 order-2 order-lg-1">
+                    <div class="side-bar">
+                        <div class="categories-item">
+                            <h4>Choice services you want when booking room</h4>
+                            <div class="categories-list">
+                                <ul>
+                                    @foreach (Service service in (List<Service>)ViewData["services"])
+                                    {
+                                        <li><img width = "100px" height = "100px" style = "object-fit:cover" src ="https://product.hstatic.net/1000379753/product/coca_cola_b74a8f1c98e549babdac5369c20c0741_master.png"> @service.ServiceName (@service.Price $)<span style = " height: 50px; width: 50px; line-height : 70px !important; padding-left: 1px !important;"><input style = "height : 30px !important; width:30px !important;" onclick = "CalAmount(this,@service.Price)" type = "checkbox" name = "sid"  value = "@service.ServiceId" /></span></li>
+                                    }
+                                    <li>Total Price of Service You Choiced : <h5 style = "display:inline" id = "resultservice"></h5>$</li>
+                                    <input type = "hidden" value = "" id = "amount_element_temp"  />
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 order-1 order-lg-2">
+                    <div class="blog-post">
+                        <div class="single-blog-post">
+                            <div class="blog-pic">
+                                <img src="~/MyFiles/@Model.Room.RoomImage" alt="">
+                            </div>
+                            <div class="blog-text">
+                                <h4>What you should know before booking room @Model.Room.RoomName</h4>
+                                <div class="blog-widget">
+                                    <div class="blog-info">
+                                        <i class="lnr lnr-user"></i>
+                                        <span>@Model.Account.DisplayName</span>
+                                    </div>
+                                    <div class="blog-info">                                        
+                                        <span><img src="~/img/clock.png" alt="">Start : @Model.StartDate.ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                    <div class="blog-info">
+                                        <span><img src="~/img/clock.png" alt="">End : @Model.EndDate.ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                    <div class="blog-info">
+                                        <i class="fa fa-folder-o"></i>
+                                        <span>@Model.Price $</span>
+                                    </div>
+                                </div>
+                                <p>@Model.Room.RoomDescription</p>
+                                <a onclick = "booking()">Booking <i class="lnr lnr-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </form>
+    <div class="row">
+@foreach (FacilityRoom f in Model.Room.FacilityRooms)
+{
+    <div class="col-lg-3 col-sm-6">
+        <div class="single-features-item">
+            @if(f.Facility.FacilityName.Equals("HighWifi")){
+               <i class="flaticon-029-wifi"></i>
+            }
+            else if(f.Facility.FacilityName.Equals("Smart TV")){
+               <i class="flaticon-019-television"></i>
+            }
+            else if(f.Facility.FacilityName.Equals("AC")){
+               <i class="flaticon-003-air-conditioner"></i>
+            }
+            else if(f.Facility.FacilityName.Equals("Parking")){
+               <i class="flaticon-036-parking"></i>
+            }
+            else if(f.Facility.FacilityName.Equals("Pool")){
+               <i class="flaticon-007-swimming-pool"></i>
+            }
+             else if(f.Facility.FacilityName.Equals("Love chair")){
+                <i class="flaticon-043-room-service"></i>
+            }
+           
+            <h4>@f.Facility.FacilityName</h4>
+            <p>Service</p>
+        </div>
+    </div>
+}
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+       function CalAmount(data,price){
+           var amount_element_temp = document.getElementById("amount_element_temp");
+           var amount_temp = amount_element_temp.value;
+           if( Number(amount_temp) <= 0){
+               amount_temp = 0;
+           }
+           if(data.checked){
+              amount_temp =  Number(amount_temp) + price;
+           }else{
+              amount_temp =  Number(amount_temp) - price;
+           }
+           if(Number(amount_temp) <= 0)
+               amount_temp = 0;
+           amount_element_temp.value = amount_temp;
+           var result = document.getElementById("resultservice");
+           result.innerHTML = amount_temp;
+       }
+       function booking(){
+           var amount_element_temp = document.getElementById("amount_element_temp");
+           var total = Number(amount_element_temp.value) + @Model.Price; 
+                       Swal.fire({
+              title: 'Total you have to pay : '+total +' $',
+              showDenyButton: true,
+              showCancelButton: true,
+              confirmButtonText: 'Booking',
+              denyButtonText: "Cancel Booking",
+            }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                document.getElementById("BookingRoom").submit(); 
+              } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+              }
+            })      
+        }
+   </script>
+   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" rel="stylesheet" />
+}

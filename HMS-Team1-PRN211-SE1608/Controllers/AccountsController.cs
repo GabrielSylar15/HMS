@@ -160,15 +160,16 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
 
         public IActionResult Login(string ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
 
-        [HttpPost, ActionName("/Accounts/Login")]
+        [HttpPost, ActionName("Login")]
         public IActionResult Login(string password, string email, string ReturnUrl)
         {
             using (var context = new PRN211_HMSContext())
             {
-                Account account = context.Accounts.First(x => x.Password.Equals(password) && x.UserName.Equals(email));
+                Account account = context.Accounts.FirstOrDefault(x => x.Password.Equals(password) && x.UserName.Equals(email));
                 if(account == null)
                 {
                     ViewBag.Message = "Login Failed";
@@ -176,7 +177,9 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
                 }
                 else
                 {
-                    if (ReturnUrl.Equals("") || ReturnUrl == null)
+                    HttpContext.Session.SetString("user", account.UserName);
+                    HttpContext.Session.SetString("id", account.AccountId.ToString());
+                    if (ReturnUrl == null || ReturnUrl.Equals(""))
                     {
                         if (account.RoleId == 1) return Redirect("/Admin/Dashboard");
                         else return Redirect("/Home/Index");
@@ -188,6 +191,31 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
         public IActionResult Signup()
         {
             return View();
+        }
+
+        [HttpPost, ActionName("Signup")]
+        public IActionResult Signup(Account a)
+        {
+            a.RoleId = 2;
+            using(var context = new PRN211_HMSContext())
+            {
+                context.Accounts.Add(a);
+                context.SaveChanges();
+                HttpContext.Session.SetString("message", "SignupSucc");
+                return Redirect("/Accounts/Login");
+            }
+        }
+
+
+        public IActionResult Logout(string id)
+        {
+            using (var context = new PRN211_HMSContext())
+            {
+                Account account = context.Accounts.First(x => x.UserName.Equals(id));
+                HttpContext.Session.Remove("user");
+                HttpContext.Session.Remove("id");
+                return Redirect("/Home/Index");
+            }
         }
     }
 }

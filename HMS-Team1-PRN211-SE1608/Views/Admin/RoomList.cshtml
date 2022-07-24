@@ -9,7 +9,6 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 }
 
 @using HMS_Team1_PRN211_SE1608.Models;
-@using Microsoft.AspNetCore.Http
 @model List<Room>
 
 <!DOCTYPE html>
@@ -22,14 +21,29 @@ For more information on enabling MVC for empty projects, visit https://go.micros
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" />
     <link href="~/css/main.css" rel="stylesheet" />
 
+    <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
 
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  height:50px;
+}
 
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
 </head>
 <body>
-
-
+    <h1>List Rooms</h1>
     <div class="s007">
-        <form action="/rooms/index">
+        <form action="/Admin/RoomList" method="get">
             <div class="inner-form">
                 <div class="basic-search">
                     <div class="input-field">
@@ -45,18 +59,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                 <div class="advance-search">
                     <span class="desc">Advanced Search</span>
                     <div class="row">
-                        <div class="input-field">
-                            <span style="font-size:20px;font-weight:500">From</span>
-                            <div class="">
-                                <input style="height:50px; border-bottom:1px solid" type="date" name="fromdate" value="@ViewBag.fromdate" />
-                            </div>
-                        </div>
-                        <div class="input-field">
-                            <span style="font-size:20px;font-weight:500">To</span>
-                            <div class="">
-                                <input style="height:50px; border-bottom:1px solid" type="date" name="todate" value="@ViewBag.todate" />
-                            </div>
-                        </div>
+                       
                         <div class="input-field">
                             <span style="font-size:20px;font-weight:500">Size</span>
                             <div class="input-select">
@@ -79,10 +82,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                                 </select>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="row second">
-                        <div style="width: calc(50% - 30px);" class="input-field">
+                        <div  class="input-field">
                             <span style="font-size:20px;font-weight:500">Price</span>
                             <input style="border-bottom: 1px solid;height:50px; width:100%" type="text" name="price" placeholder="price" value="@ViewBag.price">
                         </div>
@@ -131,109 +131,71 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row third">
                         <div class="input-field">
                             <button class="btn-search">Search</button>
-                            <button style="display:none" class="btn-delete" id="delete">Delete</button>
+                            <button class="btn-delete" id="delete">Delete</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-    <section class="room-section spad">
-        <div class="container">
-             @foreach (var item in Model)
-            {
-            <div class="rooms-page-item">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="room-pic-slider owl-carousel">
-                            <div class="single-room-pic">
-                                <img style="height: 390px;width:550px;
-                object-fit:cover;" src="~/MyFiles/@item.RoomImage" alt="">
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="room-text">
-                            <div class="room-title">
-                                <h2> @item.RoomName</h2>
-                                <div class="room-price">
-                                    <span>From</span>
-                                    <h2>@item.Size.Price$</h2>
-                                    <sub>/day</sub>
-                                </div>
-                            </div>
-                            <div style=" text-align: left;
-        
-                height: 70px;
-                
+    <p>
+        <button  type="button" class="btn btn-info"><a style="color:white;" asp-action="Create">Create New</a></button>
+    </p>
 
-                
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;" class="room-desc">
-                                <p>@item.RoomDescription</p>
-                            </div>
-                            <div class="room-features">
-                                <div class="room-info">
-                                    <i class="flaticon-019-television"></i>
-                                    <span>Smart TV</span>
-                                </div>
-                                <div class="room-info">
-                                    <i class="flaticon-029-wifi"></i>
-                                    <span>High Wi-fii</span>
-                                </div>
-                                <div class="room-info">
-                                    <i class="flaticon-003-air-conditioner"></i>
-                                    <span>AC</span>
-                                </div>
-                                <div class="room-info">
-                                    <i class="flaticon-036-parking"></i>
-                                    <span>Parking</span>
-                                </div>
-                                <div class="room-info last">
-                                    <i class="flaticon-007-swimming-pool"></i>
-                                    <span>Pool</span>
-                                </div>
-                            </div>
-                            @if (ViewBag.fromdate != null && ViewBag.todate !=null && Context.Session.GetString("id")!=null)
-                           {
-                                <a href="#" onclick="booking('@item.RoomId')" class="primary-btn">Book Now <i class="lnr lnr-arrow-right"></i></a>
-                           }
-                           <form id="@item.RoomId" action="/Rooms/Booking" method="GET">
-                                <input type="hidden" name="reservation.AccountId" value="@Context.Session.GetString("id")"></input>
-                                <input type="hidden" name="reservation.RoomId" value="@item.RoomId">
-                                <input type="hidden" name="reservation.StartDate" value="@ViewBag.fromdate">
-                                <input type="hidden" name="reservation.EndDate" value="@ViewBag.todate">
-                                <input type="hidden" name="reservation.Price" value="@item.Size.Price">
-                           </form>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Room Name
+                </th>
+                <th style="max-width:500px; ">
+                    des
+                </th>
+                <th>
+                    size
+                </th>
+                <th>
+                    price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr >
+                    <td style="min-height:60px">
+                        @item.RoomName
+                    </td>
+                    <td style="max-width:500px; overflow: hidden; ">
+                        @item.RoomDescription
+                    </td>
+                    <td>
+                        @item.Size.Size
+                    </td>
+                    <td>
+                        @item.Size.Price
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.RoomId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.RoomId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.RoomId">Delete</a>
+                    </td>
+                </tr>
             }
-              <div>
+        </tbody>
+    </table>
+    <div>
         <ul class="pagination" id="pagination">
         </ul>
     </div>
-        </div>
-    </section>
-    <!-- Rooms Section End -->
-    <!-- Rooms Section End -->
-   
-
-
-  
     <script src="~/js/choices.js"></script>
     <script>
-        function booking(x){
-            document.getElementById(x).submit()
-        }
         const customSelects = document.querySelectorAll("select");
         const deleteBtn = document.getElementById('delete')
         const choices = new Choices('select',

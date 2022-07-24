@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 
 <html lang="en" class="material-style layout-fixed">
 
@@ -41,7 +42,6 @@
         <div class="bg-primary"></div>
     </div>
     <!-- [ Preloader ] End -->
-
     <!-- [ content ] Start -->
     <div class="authentication-wrapper authentication-1 px-4">
         <div class="authentication-inner py-5">
@@ -55,9 +55,9 @@
                 </div>
             </div>
             <!-- [ Logo ] End -->
-
             <!-- [ Form ] Start -->
             <form class="my-5" action="/Accounts/Login" method="POST">
+                <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl"></inpu>
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="text" class="form-control" name="email">
@@ -76,14 +76,14 @@
                         <input type="checkbox" class="custom-control-input">
                         <span class="custom-control-label">Remember me</span>
                     </label>
-                    <button type="button" class="btn btn-primary">Sign In</button>
+                    <input type="submit" class="btn btn-primary" value="Login">
                 </div>
             </form>
             <!-- [ Form ] End -->
 
             <div class="text-center text-muted">
                 Don't have an account yet?
-                <a href="pages_authentication_register-v1.html">Sign Up</a>
+                <a href="/Accounts/Signup">Sign Up</a>
             </div>
 
         </div>
@@ -103,7 +103,33 @@
 
     <!-- Demo -->
     <script src="~/lib/admin-assets/js/analytics.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" rel="stylesheet" />
 
+
+    <script>
+       var SignupSucc = '@Context.Session.GetString("message")';
+        @{
+            Context.Session.Remove("message");
+        }
+       var message = '@ViewBag.Message';
+        if(message.length!=0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Check your Email or Password',
+            })
+        }
+        if(SignupSucc==="SignupSucc"){
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Successfully, Login your Account!',
+              showConfirmButton: false,
+              timer: 1500
+            })
+        }
+    </script>
 </body>
 
 </html>

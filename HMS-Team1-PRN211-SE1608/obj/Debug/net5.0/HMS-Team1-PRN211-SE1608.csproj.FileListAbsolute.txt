@@ -198,3 +198,9 @@ C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Dashboard.cshtml.g.cs
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Accounts\Login.cshtml.g.cs
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Accounts\Signup.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Create.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Delete.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Details.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\RoomList.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Rooms\Booking.cshtml.g.cs

@@ -207,6 +207,50 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
             return _context.Rooms.Any(e => e.RoomId == id);
         }
 
+        // Thành ( Customer booking room ) 
+        public IActionResult Booking(Reservation reservation)
+        {
+            // demo da lay duoc 1 reservation 
+            //Reservation reservationDemo = _context.Reservations.Include(r => r.Room).Include(r => r.Account).FirstOrDefault(r => r.ReservationId == 5);
+            reservation.Room = _context.Rooms.First(x => x.RoomId == reservation.RoomId);
+            reservation.Account = _context.Accounts.First(x => x.AccountId == reservation.AccountId);
+            reservation.Room.FacilityRooms = _context.FacilityRooms.Include(f => f.Facility).Where(f => f.RoomId == reservation.Room.RoomId).ToList();
+            // All Service 
+            List<Service> services = _context.Services.ToList();
+            ViewData["services"] = services;
+            return View(reservation);
+        }
+        [HttpPost]
+        [ActionName("Booking")]
+        // Insert booking into Reservation and Service
+        public IActionResult doBooking(int[] sid, Reservation reservation)
+        {
+            double total = 0;
+            List<Service> services = new List<Service>();
+            for (int i = 0; i < sid.Length; i++)
+            {
+                Service service = _context.Services.FirstOrDefault(s => s.ServiceId == sid[i]);
+                total += service.Price;
+                services.Add(service);
+            }
+            // Insert Reservation 
+            reservation.Price += total;
+            _context.Reservations.Add(reservation);
+            _context.SaveChanges();
+            // Insert Reservation_Service 
+            foreach (Service service in services)
+            {
+                ReservationService rs = new ReservationService();
+                rs.ReservationId = reservation.ReservationId;
+                rs.ServiceId = service.ServiceId;
+                rs.Price = service.Price;
+                rs.BookedDate = reservation.StartDate;
+                rs.Quantity = 1;
+                _context.ReservationServices.Add(rs);
+                _context.SaveChanges();
+            }
+            return Redirect("/ReservationServices/Index");
+        }
 
     }
 }
