@@ -4,56 +4,248 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .advanced-search{
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 10px;
+        margin-right: 10px;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .advanced-search label{
+        font-weight: bold;
+        color: #333;
+    }
+    .advanced-search .advanced-search-item{
+        flex-basis: 32%; 
+    }
+    .advanced-search .second{
+        margin-top: 2px;
+        flex-basis: calc(50% - 12px);
+    }
+    .advanced-search-submit{
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    .books-pagination{
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .shop-pagination{
+            margin-top : 10px; 
+            display : flex; 
+            justify-content : center;
+     }
+    .page-link:hover{
+        color : white !important;
+    }
+    @@media (max-width: 900px){
+        .advanced-search .advanced-search-item{
+            flex-basis: calc(50% - 12px);
+        }
+    }
+    @@media (max-width: 600px){
+        .advanced-search .advanced-search-item{
+            flex-basis: 100% !important;
+        }
+    }
+</style>
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; margin-top : 30px;">
+    <h2 style="color: #F68051">Reservation List</h2>
+    <button onclick="addRegistration()" style="margin-bottom: 5px" type="button" class="btn btn-primary">
+        New Booking
+    </button>
+</div>
+<form action = "/Reservations/Index" method = "GET">
+    <div class="advanced-search">
+        <div class="advanced-search-item">
+            <label for="title" class="mr-sm-2">Seach by Room</label>
+            <input value ="@ViewData["RoomName"]" type="text" class="form-control" name="RoomName" id="title" placeholder="Enter Room You Want To Search">
+        </div>
+        <div class="advanced-search-item">
+            <label for="registrationtimefrom">Start Date</label>
+            <input value ="@ViewData["StartDate"]" type="date" class="form-control" name="StartDate" id="registrationtimefrom">
+        </div>
+        <div class="advanced-search-item">
+            <label for="registrationtimeto">End Date</label>
+            <input value ="@ViewData["EndDate"]" type="date" class="form-control" name="EndDate" id="registrationtimeto">
+        </div>
+        <div class="advanced-search-item">
+            <label for="NameCustomer" class="mr-sm-2">Seach by Name Customer</label>
+            <input value ="@ViewData["NameCustomer"]" type="text" class="form-control" name="NameCustomer" id="NameCustomer" placeholder="Enter Name Customer You Want To Search">
+        </div>
+        <div class="advanced-search-item">
+            <label for="Phone" class="mr-sm-2">Seach by Phone Customer</label>
+            <input value ="@ViewData["Phone"]" type="text" class="form-control" name="Phone" id="Phone" placeholder="Enter Phone Number You Want To Search">
+        </div>
+        <div class="advanced-search-item">
+            <label for="Price" class="mr-sm-2">Seach by Price</label>
+            <input value ="@ViewData["Price"]" type="text" class="form-control" name="Price" id="Price" placeholder="Enter Price You Want To Search">
+        </div>
+    </div>
+    <div class="advanced-search-submit">
+        <button class="btn btn-danger" type="submit">Search</button>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Html.DisplayNameFor(model => model.Account.DisplayName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Account)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room)
+                @Html.DisplayNameFor(model => model.Account.Phone)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ReservationId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ReservationId">Delete</a>
-            </td>
-        </tr>
+            @if (item.EndDate <= DateTime.Now)
+            {
+                <tr style = "background-color:#DFF0D8">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.RoomName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.Phone)
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ReservationId">Details</a> |
+                        <i class="fa-solid fa-circle-check text-success" ></i>
+                        <a>Checked out</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.RoomName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Account.Phone)
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ReservationId">Details</a> |
+                        <a style="color : red; cursor:pointer" onclick="checkout(@item.ReservationId)">Checkout</a>
+                    </td>
+                </tr>
+            }
+
+         
+
+        
 }
     </tbody>
 </table>
+    <!-- This is pagination -->
+    <div class = "shop-pagination">
+        <ul class="pagination" id="paggerBottom">
+        </ul>
+    </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        //Phân trang
+        var pageindex = @ViewData["pageIndex"]; 
+        var totalpage = @ViewData["totalPage"]; 
+        var container = document.getElementById('paggerBottom');
+        var gap = 2;
+        var url_param = '@ViewData["url"]';
+        result = '';
+        if(pageindex - gap > 1){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page=1">first</a></li>';
+        }
+        // mới thêm
+        if(pageindex > 1){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+(pageindex - 1)+'">previous</a></li>';
+        }
+        for(var i = pageindex - gap; i < pageindex; i++){
+            if(i > 0)
+             result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+i+'">'+i+'</a></li>';
+        }
+        result += '<li class="page-item active"><span class="page-link">'+pageindex+'</span></li>';
+
+        for(var i = pageindex + 1; i <= pageindex + gap; i++){
+            if(i <= totalpage)
+             result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+i+'">'+i+'</a></li>';
+        }
+         // mới thêm
+        if(pageindex < totalpage){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+(pageindex + 1)+'">next</a></li>';
+        }
+        if(pageindex + gap < totalpage){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+totalpage+'">last</a></li>';
+        }
+        container.innerHTML = result;
+
+        function checkout(id){
+                       Swal.fire({
+              title: 'Do you want to checkout this customer ?',
+              showDenyButton: true,
+              showCancelButton: true,
+              confirmButtonText: 'Checkout',
+              denyButtonText: "Don't Checkout",
+            }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                window.location.href = "/Reservations/Checkout?id="+id;
+              } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+              }
+            })      
+        }
+
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" rel="stylesheet" />
+}

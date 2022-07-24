@@ -4,11 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; margin-top : 30px;">
+    <h2 style="color: #F68051">Services List</h2>
+    <button style="margin-bottom: 5px" type="button" class="btn btn-primary">
+        <a asp-action="Create" style="color: #ffff">Create New</a>
+    </button>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -34,7 +37,9 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ỊmageName)
+           
+               <img src=~/MyFiles/@item.ỊmageName/>
+          
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ServiceId">Edit</a> |

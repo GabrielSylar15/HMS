@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -20,6 +18,8 @@ namespace HMS_Team1_PRN211_SE1608.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Facility> Facilities { get; set; }
+        public virtual DbSet<FacilityRoom> FacilityRooms { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<ReservationService> ReservationServices { get; set; }
@@ -30,13 +30,10 @@ namespace HMS_Team1_PRN211_SE1608.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var conf = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(conf.GetConnectionString("DbConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =(local); database = PRN211_HMS;uid=sa;pwd=123456;");
             }
         }
 
@@ -78,6 +75,32 @@ namespace HMS_Team1_PRN211_SE1608.Models
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_Role");
+            });
+
+            modelBuilder.Entity<Facility>(entity =>
+            {
+                entity.Property(e => e.FacilityName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<FacilityRoom>(entity =>
+            {
+                entity.HasKey(e => new { e.FacilityId, e.RoomId });
+
+                entity.ToTable("Facility_Room");
+
+                entity.HasOne(d => d.Facility)
+                    .WithMany(p => p.FacilityRooms)
+                    .HasForeignKey(d => d.FacilityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Facility_Room_Facilities");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.FacilityRooms)
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Facility_Room_Room");
             });
 
             modelBuilder.Entity<Feedback>(entity =>
@@ -163,6 +186,8 @@ namespace HMS_Team1_PRN211_SE1608.Models
                 entity.ToTable("Room");
 
                 entity.Property(e => e.RoomDescription).HasColumnType("ntext");
+
+                entity.Property(e => e.RoomImage).HasMaxLength(100);
 
                 entity.Property(e => e.RoomName)
                     .IsRequired()

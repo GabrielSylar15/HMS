@@ -27,6 +27,15 @@ namespace HMS_Team1_PRN211_SE1608
             services.AddControllersWithViews();
             services.AddDbContext<PRN211_HMSContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddAuthentication().AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +52,9 @@ namespace HMS_Team1_PRN211_SE1608
             app.UseStaticFiles();
 
             app.UseRouting();
-
+          
+            app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -51,6 +62,9 @@ namespace HMS_Team1_PRN211_SE1608
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "admin",
+                    pattern: "Admin/{controller=Admin}/{action=Dashboard}/{id?}");
             });
         }
     }

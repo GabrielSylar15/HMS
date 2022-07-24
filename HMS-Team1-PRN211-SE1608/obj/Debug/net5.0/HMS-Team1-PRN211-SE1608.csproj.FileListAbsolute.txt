@@ -194,3 +194,7 @@ C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\HMS-Team1-PRN211-SE1608.pdb
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\HMS-Team1-PRN211-SE1608.genruntimeconfig.cache
 C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\ref\HMS-Team1-PRN211-SE1608.dll
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Shared\_LayoutAdmin.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Admin\Dashboard.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Accounts\Login.cshtml.g.cs
+C:\Users\ADMIN\Desktop\HMS-Team1-PRN211-SE1608\HMS-Team1-PRN211-SE1608\obj\Debug\net5.0\Razor\Views\Accounts\Signup.cshtml.g.cs

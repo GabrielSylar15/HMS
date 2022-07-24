@@ -1,3 +1,18 @@
 ﻿@{
-    Layout = "_Layout";
+    var controller = ViewContext.RouteData.Values["controller"].ToString();  
+    var action = ViewContext.RouteData.Values["action"].ToString();  
+    string layout = "";  
+    if (controller.Equals("Admin")||controller.Equals("Reservations")||controller.Equals("Services")&&!action.Equals("Booking"))  
+    {  
+        layout = "~/Views/Shared/_LayoutAdmin.cshtml";  
+    }  
+    else if (action.Equals("Login") || action.Equals("Signup"))
+    {
+        layout = "";
+    }
+    else  
+    {  
+        layout = "~/Views/Shared/_Layout.cshtml";  
+    }  
+    Layout = layout;  
 }

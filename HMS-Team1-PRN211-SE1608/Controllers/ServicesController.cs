@@ -1,11 +1,11 @@
-﻿using System;
+﻿using HMS_Team1_PRN211_SE1608.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HMS_Team1_PRN211_SE1608.Models;
 
 namespace HMS_Team1_PRN211_SE1608.Controllers
 {
@@ -24,6 +24,28 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
             return View(await _context.Services.ToListAsync());
         }
 
+        public async Task<IActionResult> FileUpload(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            var filePaths = new List<string>();
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    // full path to file in temp location
+                    var filePath = "C:\\Users\\Admin\\Downloads\\PRN_PE";
+                    filePaths.Add(filePath);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            // process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+            return Ok(new { count = files.Count, size, filePaths });
+        }
         // GET: Services
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,10 +75,17 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServiceId,ServiceName,Price,ỊmageName")] Service service)
+        public async Task<IActionResult> Create([Bind("ServiceId,ServiceName,Price")] Service service, IFormFile image)
         {
             if (ModelState.IsValid)
             {
+                string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MyFiles", image.FileName);
+                //copy file
+                using (var file = new FileStream(fullPath, FileMode.Create))
+                {
+                    image.CopyTo(file);
+                }
+                service.ỊmageName = image.FileName;
                 _context.Add(service);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -85,8 +114,16 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,ServiceName,Price,ỊmageName")] Service service)
+        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,ServiceName,Price,ỊmageName")] Service service, IFormFile image)
         {
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MyFiles", id + "_service" + image.FileName.Substring(image.FileName.IndexOf('.')));
+            //copy file
+            using (var file = new FileStream(fullPath, FileMode.Create))
+            {
+                image.CopyTo(file);
+            }
+            service.ỊmageName = id + "_service" + image.FileName.Substring(image.FileName.IndexOf('.'));
+
             if (id != service.ServiceId)
             {
                 return NotFound();

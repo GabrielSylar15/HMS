@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HMS_Team1_PRN211_SE1608.Models;
+using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace HMS_Team1_PRN211_SE1608.Controllers
 {
@@ -154,6 +156,38 @@ namespace HMS_Team1_PRN211_SE1608.Controllers
         private bool AccountExists(int id)
         {
             return _context.Accounts.Any(e => e.AccountId == id);
+        }
+
+        public IActionResult Login(string ReturnUrl)
+        {
+            return View();
+        }
+
+        [HttpPost, ActionName("/Accounts/Login")]
+        public IActionResult Login(string password, string email, string ReturnUrl)
+        {
+            using (var context = new PRN211_HMSContext())
+            {
+                Account account = context.Accounts.First(x => x.Password.Equals(password) && x.UserName.Equals(email));
+                if(account == null)
+                {
+                    ViewBag.Message = "Login Failed";
+                    return View();
+                }
+                else
+                {
+                    if (ReturnUrl.Equals("") || ReturnUrl == null)
+                    {
+                        if (account.RoleId == 1) return Redirect("/Admin/Dashboard");
+                        else return Redirect("/Home/Index");
+                    }else   return Redirect(ReturnUrl);
+                }
+            }
+        }
+
+        public IActionResult Signup()
+        {
+            return View();
         }
     }
 }

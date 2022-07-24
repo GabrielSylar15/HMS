@@ -1,25 +1,145 @@
-﻿@model IEnumerable<HMS_Team1_PRN211_SE1608.Models.Room>
+﻿@*
+
+For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
 
 @{
-    ViewData["Title"] = "Index";
+    
 }
 
-<h1>Index</h1>
+@using HMS_Team1_PRN211_SE1608.Models;
+@model List<Room>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+</head>
+<body>
+<h1>List Rooms</h1>
+<div class="s007">
+      <form action="/rooms/index">
+        <div class="inner-form">
+          <div class="basic-search">
+            <div class="input-field">
+              <div class="icon-wrap">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                  <path d="M18.869 19.162l-5.943-6.484c1.339-1.401 2.075-3.233 2.075-5.178 0-2.003-0.78-3.887-2.197-5.303s-3.3-2.197-5.303-2.197-3.887 0.78-5.303 2.197-2.197 3.3-2.197 5.303 0.78 3.887 2.197 5.303 3.3 2.197 5.303 2.197c1.726 0 3.362-0.579 4.688-1.645l5.943 6.483c0.099 0.108 0.233 0.162 0.369 0.162 0.121 0 0.242-0.043 0.338-0.131 0.204-0.187 0.217-0.503 0.031-0.706zM1 7.5c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5-6.5-2.916-6.5-6.5z"></path>
+                </svg>
+              </div>
+              <input id="search" name="name" type="text" placeholder="Search..." value="@ViewBag.name" />
+              
+            </div>
+          </div>
+          <div class="advance-search">
+            <span class="desc">Advanced Search</span>
+            <div class="row">
+              <div class="input-field">
+                    <span style="font-size:20px;font-weight:500">From</span> 
+                <div class="">
+                 <input style="height:50px; border-bottom:1px solid"  type="date" name="fromdate" value="@ViewBag.fromdate" />
+                </div>
+              </div>
+             <div class="input-field">
+                    <span style="font-size:20px;font-weight:500">To</span> 
+                <div class="">
+                 <input style="height:50px; border-bottom:1px solid"  type="date" name="todate" value="@ViewBag.todate" />
+                </div>
+              </div>
+              <div class="input-field">
+                   <span style="font-size:20px;font-weight:500">Size</span>
+                <div class="input-select">
+                    
+                  <select data-trigger="" name="size">
+                      <option >all size</option>
+                   @foreach(SizeRoom size in ViewBag.sizeRoom)
+                   {
+                       @if (size.SizeId == ViewBag.sizer)
+                       {
+                            <option  selected  value="@size.SizeId"  > @size.SizeId</option>
+                       }
+                       else{ <option   value="@size.SizeId"     > @size.SizeId</option>}
+                   }
+                   
+                    
+                  </select>
+                </div>
+              </div>
+              
+            </div>
+            <div class="row second">
+              <div  style="width: calc(50% - 30px);" class="input-field">    
+                <span style="font-size:20px;font-weight:500">Price</span>  
+                <input style="border-bottom: 1px solid;height:50px; width:100%" type="text" name="price" placeholder="price" value="@ViewBag.price">
+              </div>
+                <div  class="input-field" >
+                   <span style="font-size:20px;font-weight:500">Sort</span>
+                <div class="input-select">
+                    
+                  <select data-trigger="" name="sort">
+                     
+                   @if (ViewBag.sort == 1)
+                       {
+                            <option  selected  value="1"  >name: a-z </option>
+                       }
+                    else{ <option   value="1" > name: a-z</option>}
+                    @if (ViewBag.sort == 2)
+                       {
+                            <option  selected  value="2"  > name: z-a </option>
+                       }
+                    else{ <option   value="2" > name: z-a</option>}
+                    @if (ViewBag.sort == 3)
+                       {
+                            <option  selected  value="3"  > price: low to high </option>
+                       }
+                    else{ <option   value="3" >price: low to high </option>}
+                    @if (ViewBag.sort == 4)
+                       {
+                            <option  selected  value="4"  > price: high to low </option>
+                       }
+                    else{ <option   value="1" > price: high to low</option>}
+                    
+              
+
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row third">
+              <div class="input-field">
+                <button class="btn-search">Search</button>
+                <button class="btn-delete" id="delete">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+
+
+<table class="table table-hover">
+    <thead class="thead-dark">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RoomName)
+                Room Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoomDescription)
+                des
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Size)
+                size
+            </th>
+            <th>
+                price
             </th>
             <th></th>
         </tr>
@@ -28,13 +148,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.RoomName)
+                @item.RoomName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RoomDescription)
+             @item.RoomDescription
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Size.SizeId)
+                @item.Size.Size
+            </td>
+            <td>
+                @item.Size.Price
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RoomId">Edit</a> |
@@ -45,3 +168,83 @@
 }
     </tbody>
 </table>
+    <div >
+        <ul class="pagination" id="pagination">
+ 
+    </ul>
+    </div>
+<script src="~/js/choices.js"></script>
+    <script>
+      const customSelects = document.querySelectorAll("select");
+      const deleteBtn = document.getElementById('delete')
+      const choices = new Choices('select',
+      {
+        searchEnabled: false,
+        removeItemButton: true,
+        itemSelectText: '',
+      });
+      for (let i = 0; i < customSelects.length; i++)
+      {
+        customSelects[i].addEventListener('addItem', function(event)
+        {
+          if (event.detail.value)
+          {
+            let parent = this.parentNode.parentNode
+            parent.classList.add('valid')
+            parent.classList.remove('invalid')
+          }
+          else
+          {
+            let parent = this.parentNode.parentNode
+            parent.classList.add('invalid')
+            parent.classList.remove('valid')
+          }
+        }, false);
+      }
+      deleteBtn.addEventListener("click", function(e)
+      {
+        e.preventDefault()
+        const deleteAll = document.querySelectorAll('.choices__button')
+        for (let i = 0; i < deleteAll.length; i++)
+        {
+          deleteAll[i].click();
+        }
+      });
+      
+        //Phân trang
+        var pageindex = @ViewBag.page; 
+        var totalpage = @ViewBag.totalPage; 
+
+        var container = document.getElementById('pagination');
+        var gap = 2;
+        var url_param = '@ViewBag.url';
+        result = '';
+        if(pageindex - gap > 1){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page=1">first</a></li>';
+        }
+        // mới thêm
+        if(pageindex > 1){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+(pageindex - 1)+'">previous</a></li>';
+        }
+        for(var i = pageindex - gap; i < pageindex; i++){
+            if(i > 0)
+             result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+i+'">'+i+'</a></li>';
+        }
+        result += '<li class="page-item active"><span class="page-link">'+pageindex+'</span></li>';
+
+        for(var i = pageindex + 1; i <= pageindex + gap; i++){
+            if(i <= totalpage)
+             result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+i+'">'+i+'</a></li>';
+        }
+         // mới thêm
+        if(pageindex < totalpage){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+(pageindex + 1)+'">next</a></li>';
+        }
+        if(pageindex + gap < totalpage){
+            result += '<li class="page-item"><a class="page-link" href="'+url_param+'page='+totalpage+'">last</a></li>';
+        }
+        container.innerHTML = result;
+
+    </script>
+</body>
+</html>
